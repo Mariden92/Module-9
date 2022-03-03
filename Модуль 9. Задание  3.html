@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="send">Кнопка</button>
+    <input id="input">
+    <div id="result">
+      <img id="image">
+    </div>
+    <script>
+const btn = document.getElementById ('send');
+const input = document.getElementById ('input');
+const img = document.getElementById ('image');
+const result = document.getElementById ('result');
+const xhr = new XMLHttpRequest();
+btn.onclick = () => {
+    const val = +input.value;
+    if (typeof val ==="number"&& !isNaN(val)) {
+      if (val<1 || val>10) {
+        result.innerText = "Введите число от 1 до 10";
+      }
+    }
+    else {
+        let responseUrl = "https://picsum.photos/v2/list?limit="+val;
+        xhr.open("GET",responseUrl);
+        xhr.onload = function () {
+            if (xhr.status===200) {
+                let imgSrc = JSON.parse (xhr.response)[val-1]["download_url"];
+                let imgAlt = JSON.parse (xhr.response)[val-1]["author"];
+                img.setAttribute("src",imgSrc);
+                img.setAttribute("alt",imgAlt);
+                img.setAttribute("width",500);
+            }
+        }
+        xhr.onerror = function () {
+            result.innerText = "При отправке запроса произошла ошибка";
+        }
+        xhr.send ()
+    }
+}
+
+
+    </script>
+</body>
+</html>

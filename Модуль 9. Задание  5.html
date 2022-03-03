@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <p> <label>Номер страницы</label> <br />
+          <input id="num1" class="text" size="30"> </p>
+        <p> <label>Лимит</label> <br />
+          <input id="num2" class="text" size="30" > </p>
+        <p> <button class="btn">Запрос</button> </p>
+      <div id="div-result"></div>
+      <img id="img-result"/>
+<script>
+    const btn = document.querySelector('.btn');
+
+btn.addEventListener('click', () => {
+  const value1 = +document.getElementById('num1').value;
+  const value2 = +document.getElementById('num2').value;
+  const div_result = document.getElementById('div-result');
+  const resultInnerHTML = localStorage.getItem("resultInnerHTML")
+  div_result.textContent = '';
+  if (resultInnerHTML)
+        div_result.innerHTML = resultInnerHTML
+        function doRequest(url, cb) {
+        fetch(url)
+          .then(data => data.json())
+          .then(data => cb(data))
+          .catch(error => {
+            console.error(error)
+            alert(error)
+          })
+      }
+
+      function displayResult(data) {
+        let cards = ""
+        data.forEach(item => {
+          cards = cards + `
+            <div class="card border-dark mb-3">
+              <img src="${item.download_url}" class="card-img-top" alt="img" />
+              <div class="card-body">
+                <p class="card-text">Author: ${item.author}</p>
+              </div>
+            </div>
+          `
+        })
+        div_result.innerHTML = cards
+        localStorage.setItem("resultInnerHTML", cards)
+      }
+
+  if (!(value1 >= 1 && value1 <= 10 && typeof value1==="number")) {
+    div_result.textContent = 'Номер страницы вне диапазона от 1 до 10';
+    return;
+  }
+  else if (!(value2 >= 1 && value2 <= 10 && typeof value2==="number")) {
+    div_result.textContent = 'Лимит вне диапазона от 1 до 10';
+    return;
+  }
+  else if (!(value2 <=10 && value1 <=10)) {
+    div_result.textContent = "Номер страницы и лимит вне диапазона от 1 до 10"
+    return;
+  }
+  else if (error) {
+    
+          div_result.innerHTML = `<p style="color:red;">${error}</p>`
+  }
+  
+  else {
+    doRequest(`https://picsum.photos/v2/list?page=${value1}&limit=${value2}`, displayResult)
+return;
+  }
+
+});
+</script>
+
+</body>
+</html>

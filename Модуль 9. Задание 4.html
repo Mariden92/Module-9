@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+    
+    <p> <label>Ширина</label> <br />
+      <input id="num1" class="text" size="30" > </p>
+    <p> <label>Высота</label> <br />
+      <input id="num2" class="text" size="30" > </p>
+    <p> <button class="btn j-btn">Запрашиваемые данные</button> </p>
+  
+  <div id="j-result"></div>
+  <img id="result"/>
+  <script>
+    const btn = document.querySelector('.j-btn');
+
+btn.addEventListener('click', () => {
+  const value1 = +document.getElementById('num1').value;
+  const value2 = +document.getElementById('num2').value;
+
+  let s = document.getElementById('j-result');
+  s.textContent = '';
+  if (!(value1 >= 100 && value1 <= 300 && value2 >= 100 && value2 <= 300)) {
+    s.textContent = 'одно из чисел вне диапазона от 100 до 300';
+    return;
+  }
+
+  fetch(`https://picsum.photos/${value1}/${value2}`)
+    .then((response) => {
+      document.getElementById('result').src = response.url;
+    });
+
+});
+  </script>
+  
+</body>
+</html>
+
